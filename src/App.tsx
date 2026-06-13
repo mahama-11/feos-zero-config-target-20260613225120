@@ -1,1 +1,1 @@
-export function App(){return <button>happy path</button>}
+export function App(){return <button>happy source-only</button>}

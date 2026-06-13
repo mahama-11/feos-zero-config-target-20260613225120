@@ -1,1 +1,1 @@
-export function App(){return <div>ok</div>}
+export function App(){return <button>bad path</button>}

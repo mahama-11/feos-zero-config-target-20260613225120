@@ -1,1 +1,13 @@
-{"name":"feos-zero-config-target","private":true,"dependencies":{"react":"^18.2.0","vite":"^5.0.0"},"scripts":{"typecheck":"python3 -c \\"print(\x27typecheck ok\x27)\\"","build":"python3 -c \\"print(\x27build ok\x27)\\"","test:e2e:mock":"python3 -c \\"print(\x27smoke ok\x27)\\"","frontend:evidence":"python3 -c \\"print(\x27evidence ok\x27)\\""}}
+{
+  "name": "feos-zero-config-target",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "vite": "^5.0.0"
+  },
+  "scripts": {
+    "typecheck": "python3 -c \"print('typecheck ok')\"",
+    "build": "python3 -c \"print('build ok')\"",
+    "test:e2e:mock": "python3 -c \"print('smoke ok')\""
+  }
+}

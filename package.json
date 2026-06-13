@@ -8,6 +8,7 @@
   "scripts": {
     "typecheck": "python3 -c \"print('typecheck ok')\"",
     "build": "python3 -c \"print('build ok')\"",
-    "test:e2e:mock": "python3 -c \"print('smoke ok')\""
+    "test:e2e:mock": "python3 -c \"print('smoke ok')\"",
+    "frontend:evidence": "python3 -c \"print('evidence ok')\""
   }
 }

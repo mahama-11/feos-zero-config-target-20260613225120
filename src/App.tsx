@@ -1,1 +1,1 @@
-export function App(){return <button>bad path</button>}
+export function App(){return <button>happy path</button>}

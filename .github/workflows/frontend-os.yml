@@ -1,0 +1,64 @@
+name: Frontend OS Zero Config Gate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - release/**
+  workflow_dispatch:
+
+jobs:
+  frontend-os:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Bootstrap FEOS
+        shell: bash
+        env:
+          FEOS_REPO_URL: ${{ vars.FEOS_REPO_URL }}
+          FEOS_REF: ${{ vars.FEOS_REF || 'main' }}
+        run: |
+          if [ -z "${FEOS_REPO_URL:-}" ]; then
+            echo "Set repository variable FEOS_REPO_URL to the frontend-engineering-os repository URL." >&2
+            exit 10
+          fi
+          tmp="$(mktemp -d)"
+          git clone --depth 1 --branch "${FEOS_REF:-main}" "$FEOS_REPO_URL" "$tmp/frontend-engineering-os"
+          "$tmp/frontend-engineering-os/scripts/bootstrap-feos.sh" --source "$tmp/frontend-engineering-os" --install-dir .frontend-os/bin
+          .frontend-os/bin/frontend-os --help >/dev/null
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: FEOS Zero Config CI
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            .frontend-os/bin/frontend-os ci --root . --skip-not-applicable --base "${{ github.event.pull_request.base.sha }}" --head "${{ github.event.pull_request.head.sha }}"
+          else
+            .frontend-os/bin/frontend-os ci --root . --skip-not-applicable --base "${{ github.event.before }}" --head "${{ github.sha }}"
+          fi
+
+      - name: Upload FEOS Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-os-artifacts
+          path: .frontend-os/

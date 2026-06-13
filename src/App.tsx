@@ -1,1 +1,1 @@
-export function App(){return <button>happy source-only</button>}
+export function App(){return <button>bad source-only</button>}
